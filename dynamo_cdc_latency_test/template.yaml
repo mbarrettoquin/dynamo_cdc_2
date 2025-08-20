@@ -3,6 +3,11 @@ Transform: AWS::Serverless-2016-10-31
 Description: >
   SAM template for DynamoDB CDC latency test
 
+Parameters:
+  DynamoDBStreamArn:
+    Type: String
+    Description: The ARN of the DynamoDB stream.
+
 Resources:
   DynamoDBStreamProcessor:
     Type: AWS::Serverless::Function
@@ -12,6 +17,7 @@ Resources:
       Runtime: python3.9
       CodeUri: .
       Policies:
+        - AWSLambdaBasicExecutionRole # Policy for CloudWatch Logs
         - DynamoDBCrudPolicy:
             TableName: FOS_DocStore_Compare_POC-dev-dynamodb
         - Statement:
@@ -21,11 +27,11 @@ Resources:
               - dynamodb:GetRecords
               - dynamodb:DescribeStream
               - dynamodb:ListStreams
-            Resource: !Sub "arn:aws:dynamodb:us-east-2:380278405655:table/FOS_DocStore_Compare_POC-dev-dynamodb/stream/2025-08-20T14:47:03.853"
+            Resource: !Ref DynamoDBStreamArn
       Events:
         Stream:
           Type: DynamoDB
           Properties:
-            Stream: !Sub "arn:aws:dynamodb:us-east-2:380278405655:table/FOS_DocStore_Compare_POC-dev-dynamodb/stream/2025-08-20T14:47:03.853"
+            Stream: !Ref DynamoDBStreamArn
             StartingPosition: LATEST
             BatchSize: 1
