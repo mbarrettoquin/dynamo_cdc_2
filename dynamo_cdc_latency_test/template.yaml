@@ -21,11 +21,11 @@ Resources:
               - dynamodb:GetRecords
               - dynamodb:DescribeStream
               - dynamodb:ListStreams
-            Resource: !Sub "arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/FOS_DocStore_Compare_POC-dev-dynamodb/stream/*"
+            Resource: !Sub "arn:aws:dynamodb:us-east-2:380278405655:table/FOS_DocStore_Compare_POC-dev-dynamodb/stream/2025-08-20T14:47:03.853"
       Events:
         Stream:
           Type: DynamoDB
           Properties:
-            Stream: !Sub "arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/FOS_DocStore_Compare_POC-dev-dynamodb/stream/*"
+            Stream: !Sub "arn:aws:dynamodb:us-east-2:380278405655:table/FOS_DocStore_Compare_POC-dev-dynamodb/stream/2025-08-20T14:47:03.853"
             StartingPosition: LATEST
             BatchSize: 1
