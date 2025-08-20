@@ -1,0 +1,31 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  SAM template for DynamoDB CDC latency test
+
+Resources:
+  DynamoDBStreamProcessor:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: dynamo-cdc-latency-test
+      Handler: app.lambda_handler
+      Runtime: python3.9
+      CodeUri: .
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: FOS_DocStore_Compare_POC-dev-dynamodb
+        - Statement:
+          - Effect: Allow
+            Action:
+              - dynamodb:GetShardIterator
+              - dynamodb:GetRecords
+              - dynamodb:DescribeStream
+              - dynamodb:ListStreams
+            Resource: !Sub "arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/FOS_DocStore_Compare_POC-dev-dynamodb/stream/*"
+      Events:
+        Stream:
+          Type: DynamoDB
+          Properties:
+            Stream: !Sub "arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/FOS_DocStore_Compare_POC-dev-dynamodb/stream/*"
+            StartingPosition: LATEST
+            BatchSize: 1

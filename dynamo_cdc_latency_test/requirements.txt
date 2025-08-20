@@ -1,0 +1,2 @@
+# No external dependencies are required for the Lambda function.
+# The 'boto3' library is included in the AWS Lambda runtime environment by default.
